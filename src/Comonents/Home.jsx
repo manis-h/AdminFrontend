@@ -1,33 +1,33 @@
-import { HomeIcon, LayoutDashboardIcon, User, Wallet } from 'lucide-react'
-import React, { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { NavLink, useLocation } from 'react-router-dom';
-import logo from "./Assets/5.png"
-import { useDispatch, useSelector } from 'react-redux';
-import { userSignout } from '../Redux/Auth/action';
-import Withdrawl from './Withdrawl';
-import Alluser from './Alluser';
-import AddAccount from './AddAccount';
-import io from 'socket.io-client';
-import { toast } from 'react-toastify';
-import axios from 'axios';
-import BetResult from './BetResult';
-import BetResultfive from './BetResultfive';
+import { HomeIcon, LayoutDashboardIcon, User, Wallet } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+import logo from "./Assets/5.png";
+import { useDispatch, useSelector } from "react-redux";
+import { userSignout } from "../Redux/Auth/action";
+import Withdrawl from "./Withdrawl";
+import Alluser from "./Alluser";
+import AddAccount from "./AddAccount";
+import io from "socket.io-client";
+import { toast } from "react-toastify";
+import axios from "axios";
+import BetResult from "./BetResult";
+import BetResultfive from "./BetResultfive";
 
 const predefinedBets = [
-    { index: 0, resultColor: 'violet+red', resultValue: 0 },
-    { index: 1, resultColor: 'green', resultValue: 1 },
-    { index: 2, resultColor: 'red', resultValue: 2 },
-    { index: 3, resultColor: 'green', resultValue: 3 },
-    { index: 4, resultColor: 'red', resultValue: 4 },
-    { index: 5, resultColor: 'violet+green', resultValue: 5 },
-    { index: 6, resultColor: 'red', resultValue: 6 },
-    { index: 7, resultColor: 'green', resultValue: 7 },
-    { index: 8, resultColor: 'red', resultValue: 8 },
-    { index: 9, resultColor: 'green', resultValue: 9 },
-    { index: 10, resultColor: 'violet', resultValue: '' },
-    { index: 11, resultColor: 'green', resultValue: '' },
-    { index: 12, resultColor: 'red', resultValue: '' },
+    { index: 0, resultColor: "violet+red", resultValue: 0 },
+    { index: 1, resultColor: "green", resultValue: 1 },
+    { index: 2, resultColor: "red", resultValue: 2 },
+    { index: 3, resultColor: "green", resultValue: 3 },
+    { index: 4, resultColor: "red", resultValue: 4 },
+    { index: 5, resultColor: "violet+green", resultValue: 5 },
+    { index: 6, resultColor: "red", resultValue: 6 },
+    { index: 7, resultColor: "green", resultValue: 7 },
+    { index: 8, resultColor: "red", resultValue: 8 },
+    { index: 9, resultColor: "green", resultValue: 9 },
+    { index: 10, resultColor: "violet", resultValue: "" },
+    { index: 11, resultColor: "green", resultValue: "" },
+    { index: 12, resultColor: "red", resultValue: "" },
 ];
 
 const Home = () => {
@@ -37,8 +37,8 @@ const Home = () => {
     const location = useLocation();
     const [newGameTimestamp, setNewGameTimestamp] = useState(null);
     const [newGameId, setNewGameId] = useState(null);
-    const [results, setResult] = useState()
-    const [allbet, setAllbeta] = useState([])
+    const [results, setResult] = useState();
+    const [allbet, setAllbeta] = useState([]);
     const [gameupi, setGameupi] = useState(); // Initialize with null
     const [colorMap, setColorMap] = useState({}); // Track color for each number
     const [valueMap, setValueMap] = useState({}); // Track value for each number
@@ -48,35 +48,35 @@ const Home = () => {
         dispatch(userSignout());
     };
 
-    // game id or time from backend socket 
+    // game id or time from backend socket
     useEffect(() => {
-        const socket = io('http://localhost:4000');
+        const socket = io("http://localhost:4000");
 
-        socket.on('newGameId', (gameId) => {
+        socket.on("newGameId", (gameId) => {
             const timestamp = Date.now();
-            console.log('Received new gameId:', gameId);
+            console.log("Received new gameId:", gameId);
 
             setNewGameId(gameId);
             setNewGameTimestamp(timestamp);
             setGameupi(gameId); // Set gameupi here
         });
-        handleGetallResult()
+        handleGetallResult();
 
         return () => {
             socket.disconnect();
         };
     }, []);
 
-    // TOTAL AMOUNT OF NUMBER OR COLOR 
+    // TOTAL AMOUNT OF NUMBER OR COLOR
     const handleGetallBet = async (gameupi) => {
         try {
             const url = `http://localhost:4000/api/getAllBets?gameID=${gameupi}`;
             const { data } = await axios.get(url, {
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    Authorization: `Bearer ${token}`,
+                },
             });
-            console.log('Fetched all bets of previous gameID:', data); // Verify the data
+            console.log("Fetched all bets of previous gameID:", data); // Verify the data
             setAllbeta(data.data);
         } catch (error) {
             console.error("Error fetching bets:", error);
@@ -92,10 +92,12 @@ const Home = () => {
         }
     };
 
-    // GET GAME RESULT 
+    // GET GAME RESULT
     const handleGetallResult = async () => {
         try {
-            const { data } = await axios.get("http://localhost:4000/api/results");
+            const { data } = await axios.get(
+                "http://localhost:4000/api/results"
+            );
             // console.log("data from previous gameID", data[1].gameID)
             await handleGetallBet(data[1].gameID);
             await handleBet(data[1].gameID);
@@ -114,24 +116,21 @@ const Home = () => {
         }
     };
 
-    console.log("LAST GAME ID", results)
-    console.log(allbet)
+    console.log("LAST GAME ID", results);
+    console.log(allbet);
 
     useEffect(() => {
         if (gameupi) {
             handleGetallBet(gameupi);
-            handleGetallResult()
+            handleGetallResult();
         }
     }, [gameupi]);
 
- 
-    console.log(selectedBet)
+    console.log(selectedBet);
 
-
-    // bet function 
+    // bet function
     const handleBet = async (gameupi) => {
         console.log("handleBet", gameupi);
-
 
         try {
             const { resultColor, resultValue } = selectedBet;
@@ -140,11 +139,11 @@ const Home = () => {
                 { result: { resultColor, resultValue } }, // Send only resultColor and resultValue directly
                 {
                     headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
             );
-            console.log('Bet posted successfully:', response.data);
+            console.log("Bet posted successfully:", response.data);
             toast.success("Bet posted successfully", {
                 position: "top-right",
                 autoClose: 3000,
@@ -159,13 +158,11 @@ const Home = () => {
             setSelectedBet(null);
         } catch (error) {
             console.error("Error posting bet:", error);
-
         }
     };
 
     return (
-        <div className='d-flex'>
-
+        <div className="d-flex">
             <div
                 className="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark"
                 style={{ width: 250 }}
@@ -174,14 +171,19 @@ const Home = () => {
                     to="/"
                     className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
                 >
-                    <div className='imagelogo'>
+                    <div className="imagelogo">
                         {/* <img className='imagelogo' height={"90px"} src={logo} alt='loogo'/> */}
                     </div>
                 </Link>
                 <hr />
                 <ul className="nav nav-pills flex-column mb-auto">
                     <li className="nav-item">
-                        <NavLink to="/" className="nav-link  text-white" activeClassName="active" aria-current="page">
+                        <NavLink
+                            to="/"
+                            className="nav-link  text-white"
+                            activeClassName="active"
+                            aria-current="page"
+                        >
                             <HomeIcon />
                             Home
                         </NavLink>
@@ -193,29 +195,59 @@ const Home = () => {
                         </NavLink>
                     </li> */}
 
-
                     <li>
-                        <NavLink to="/withdrawl" exact className="nav-link text-white" activeClassName="active">
+                        <NavLink
+                            to="/withdrawl"
+                            exact
+                            className="nav-link text-white"
+                            activeClassName="active"
+                        >
                             <Wallet />
                             Deposit & Withdrawl
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/addaccount" exact className="nav-link text-white" activeClassName="active">
+                        <NavLink
+                            to="/admins"
+                            exact
+                            className="nav-link text-white"
+                            activeClassName="active"
+                        >
                             <Wallet />
                             Account Details
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/betresult" exact className="nav-link text-white" activeClassName="active">
+                        <NavLink
+                            to="/betresult"
+                            exact
+                            className="nav-link text-white"
+                            activeClassName="active"
+                        >
                             <Wallet />
                             Result
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/betresultfive" exact className="nav-link text-white" activeClassName="active">
+                        <NavLink
+                            to="/betresultfive"
+                            exact
+                            className="nav-link text-white"
+                            activeClassName="active"
+                        >
                             <Wallet />
                             Result 5 Mint
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            to="/users"
+                            exact
+                            className="nav-link text-white"
+                            activeClassName="active"
+                        >
+                            <User />
+                            Registered Users
                         </NavLink>
                     </li>
                 </ul>
@@ -241,10 +273,6 @@ const Home = () => {
                         className="dropdown-menu dropdown-menu-dark text-small shadow"
                         aria-labelledby="dropdownUser1"
                     >
-
-
-
-
                         <li onClick={handleSignout}>
                             <Link className="dropdown-item" to="#">
                                 Sign out
@@ -252,44 +280,18 @@ const Home = () => {
                         </li>
                     </ul>
                 </div>
-
-
-
-
-
             </div>
 
-
-            <div className='over'>
+            <div className="over">
                 {/* user all    */}
 
+                {location.pathname === "/betresult" && <BetResult />}
 
-
-
-                {location.pathname === '/betresult' && (
-
-                    <BetResult />
-                )}
-
-
-
-
-                {location.pathname === '/betresultfive' && (
-
-                    <BetResultfive />
-                )}
-
+                {location.pathname === "/betresultfive" && <BetResultfive />}
 
                 {/* withdrawl deposite  */}
 
-
-                {location.pathname === '/withdrawl' && (
-
-                    <Withdrawl />
-                )}
-
-
-
+                {location.pathname === "/withdrawl" && <Withdrawl />}
 
                 {/* {location.pathname === '/dashboard' && (
                     <div div className='d-block'>
@@ -411,38 +413,13 @@ const Home = () => {
                     </div>
                 )} */}
 
-
-
-
-
-
-
-
                 {/* home  */}
 
-
-                {location.pathname === '/' && (
-
-                    <Alluser />
-                )}
-                {location.pathname === '/addaccount' && (
-
-                    <AddAccount />
-                )}
-
-
-
-
-
-
-
-
-
-
-
+                {location.pathname === "/" && <Alluser />}
+                {location.pathname === "/addaccount" && <AddAccount />}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Home
+export default Home;
