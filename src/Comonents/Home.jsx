@@ -214,7 +214,7 @@ const Home = () => {
                             activeClassName="active"
                         >
                             <Wallet />
-                            Account Details
+                            Bank Accounts
                         </NavLink>
                     </li>
                     <li>
