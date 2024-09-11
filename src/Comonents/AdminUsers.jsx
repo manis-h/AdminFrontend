@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Table } from "react-bootstrap";
+import SideBar from "./SideBar";
 
 const AdminUsers = () => {
     const { token } = useSelector((store) => store.AuthReducer);
@@ -27,7 +28,8 @@ const AdminUsers = () => {
     }, []);
 
     return (
-        <div>
+        <div className="d-flex">
+            <SideBar />
             <div className="custom-table w-100">
                 <Table bordered hover>
                     <thead>

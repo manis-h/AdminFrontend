@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import BetResult from "./BetResult";
 import BetResultfive from "./BetResultfive";
+import SideBar from "./SideBar";
 
 const predefinedBets = [
     { index: 0, resultColor: "violet+red", resultValue: 0 },
@@ -43,10 +44,6 @@ const Home = () => {
     const [colorMap, setColorMap] = useState({}); // Track color for each number
     const [valueMap, setValueMap] = useState({}); // Track value for each number
     const [selectedBet, setSelectedBet] = useState(null); // Store clicked bet
-
-    const handleSignout = () => {
-        dispatch(userSignout());
-    };
 
     // game id or time from backend socket
     useEffect(() => {
@@ -163,125 +160,7 @@ const Home = () => {
 
     return (
         <div className="d-flex">
-            <div
-                className="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark"
-                style={{ width: 250 }}
-            >
-                <Link
-                    to="/"
-                    className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
-                >
-                    <div className="imagelogo">
-                        {/* <img className='imagelogo' height={"90px"} src={logo} alt='loogo'/> */}
-                    </div>
-                </Link>
-                <hr />
-                <ul className="nav nav-pills flex-column mb-auto">
-                    <li className="nav-item">
-                        <NavLink
-                            to="/"
-                            className="nav-link  text-white"
-                            activeClassName="active"
-                            aria-current="page"
-                        >
-                            <HomeIcon />
-                            Home
-                        </NavLink>
-                    </li>
-                    {/* <li>
-                        <NavLink to="/dashboard" className="nav-link text-white" activeClassName="active">
-                            <LayoutDashboardIcon />
-                            Dashboard
-                        </NavLink>
-                    </li> */}
-
-                    <li>
-                        <NavLink
-                            to="/withdrawl"
-                            exact
-                            className="nav-link text-white"
-                            activeClassName="active"
-                        >
-                            <Wallet />
-                            Deposit & Withdrawl
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="/admins"
-                            exact
-                            className="nav-link text-white"
-                            activeClassName="active"
-                        >
-                            <Wallet />
-                            Bank Accounts
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="/betresult"
-                            exact
-                            className="nav-link text-white"
-                            activeClassName="active"
-                        >
-                            <Wallet />
-                            Result
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="/betresultfive"
-                            exact
-                            className="nav-link text-white"
-                            activeClassName="active"
-                        >
-                            <Wallet />
-                            Result 5 Mint
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="/users"
-                            exact
-                            className="nav-link text-white"
-                            activeClassName="active"
-                        >
-                            <User />
-                            Registered Users
-                        </NavLink>
-                    </li>
-                </ul>
-                <hr />
-                <div className="dropdown">
-                    <Link
-                        to="#"
-                        className="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-                        id="dropdownUser1"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-                        <img
-                            src="https://github.com/mdo.png"
-                            alt=""
-                            width={32}
-                            height={32}
-                            className="rounded-circle me-2"
-                        />
-                        <strong>Rahul</strong>
-                    </Link>
-                    <ul
-                        className="dropdown-menu dropdown-menu-dark text-small shadow"
-                        aria-labelledby="dropdownUser1"
-                    >
-                        <li onClick={handleSignout}>
-                            <Link className="dropdown-item" to="#">
-                                Sign out
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
+            <SideBar />
             <div className="over">
                 {/* user all    */}
 

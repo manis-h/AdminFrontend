@@ -1,18 +1,15 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { Navigate } from 'react-router-dom';
+import React from "react";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 const PrivateRoute = ({ children }) => {
-  
-    const { token } = useSelector((store) => (store.AuthReducer));
-    const { isAdmin } = useSelector((store) => (store.AuthReducer));
-    console.log(token)
+    const { token } = useSelector((store) => store.AuthReducer);
+    const { isUserAdmin } = useSelector((store) => store.AuthReducer);
 
-
-    if (!token || isAdmin===false) {
-        return <Navigate to='/login' state={{path:'login'}} replace/>
+    if (!token || isUserAdmin === false) {
+        return <Navigate to="/login" state={{ path: "login" }} replace />;
     }
-    return children
-}
+    return children;
+};
 
-export default PrivateRoute
+export default PrivateRoute;

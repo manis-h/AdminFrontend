@@ -4,6 +4,7 @@ import Home from "../Comonents/Home";
 import Login from "../Comonents/Login";
 import RegisteredUsers from "../Comonents/RegisteredUsers";
 import AdminUsers from "../Comonents/AdminUsers";
+import Withdrawl from "../Comonents/Withdrawl";
 
 export const AllRoutes = () => {
     return (
@@ -13,7 +14,7 @@ export const AllRoutes = () => {
             <Route path="/dashboard" element={<Home />} />
             <Route path="/user" element={<Home />} />
             <Route path="/admins" element={<AdminUsers />} />
-            <Route path="/withdrawl" element={<Home />} />
+            <Route path="/withdrawal" element={<Withdrawl />} />
             <Route path="/users" element={<RegisteredUsers />} />
             <Route path="/addaccount" element={<Home />} />
             <Route path="/betresult" element={<Home />} />
