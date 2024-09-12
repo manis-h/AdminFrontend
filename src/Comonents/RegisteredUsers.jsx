@@ -84,7 +84,7 @@ const RegisteredUsers = () => {
                 <Table bordered hover>
                     <thead>
                         <tr>
-                            <th>UserId</th>
+                            <th>UserName</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Status</th>
@@ -94,9 +94,9 @@ const RegisteredUsers = () => {
                         {Array.isArray(users) &&
                             users.map((user, index) => (
                                 <tr key={index}>
-                                    <td>{user.userId}</td>
+                                    <td>{user.userName}</td>
                                     <td>{user.name}</td>
-                                    <td>{user.Email}</td>
+                                    <td>{user.email}</td>
                                     <td>
                                         <Form>
                                             <Form.Check
@@ -108,12 +108,9 @@ const RegisteredUsers = () => {
                                                         user._id,
                                                         user.status
                                                     )
-                                                } // Handle toggling
+                                                }
                                             />
                                         </Form>
-                                        {/* {user.status == true
-                                            ? "Active"
-                                            : "Inactive"} */}
                                     </td>
                                 </tr>
                             ))}

@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "../Comonents/Home";
 import Login from "../Comonents/Login";
+import ResetPassword from "../Comonents/ResetPassoword";
 import RegisteredUsers from "../Comonents/RegisteredUsers";
 import AdminUsers from "../Comonents/AdminUsers";
 import Withdrawl from "../Comonents/Withdrawl";

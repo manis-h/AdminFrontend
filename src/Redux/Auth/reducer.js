@@ -8,11 +8,9 @@ const initialState = {
     isLoading: false,
     isError: false,
     message: "",
-    username: Cookies.get("user_name") || "",
+    userName: Cookies.get("userName") || "",
     email: Cookies.get("email") || "",
-    contactNumber: Cookies.get("contactNumber") || "",
-    walletBalance: Cookies.get("walletBalance") || 0,
-    referralCode: Cookies.get("referralCode") || "",
+    isResetPassword: Cookies.get("isResetPassword") || false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -27,17 +25,14 @@ const reducer = (state = initialState, action) => {
             const { user, token } = payload;
 
             // Set cookies for user information
-            Cookies.set("user_name", user.username);
+            Cookies.set("userName", user.userName);
             Cookies.set("token", token);
             Cookies.set("isAuth", true);
             Cookies.set(
-                "isUserAdmin",
+                "isUserRole",
                 user.userRole === "admin" || user.userRole === "Admin"
             );
             Cookies.set("email", user.email);
-            Cookies.set("contactNumber", user.contactNumber);
-            Cookies.set("walletBalance", user.walletBalance);
-            Cookies.set("referralCode", user.referralCode);
 
             return {
                 ...state,
@@ -45,23 +40,25 @@ const reducer = (state = initialState, action) => {
                 isAuth: true,
                 isAdmin: user.role === "admin",
                 token: token,
-                username: user.username,
+                userName: user.userName,
                 email: user.email,
-                contactNumber: user.contactNumber,
-                walletBalance: user.walletBalance,
-                referralCode: user.referralCode,
                 isError: false,
+            };
+
+        case types.USER_RESET_PASSWORD:
+            Cookies.set("isResetPassword", true);
+
+            return {
+                ...state,
+                isResetPassword: true,
             };
 
         case types.USER_LOGIN_FAILURE:
             Cookies.remove("isAuth");
-            Cookies.remove("user_name");
+            Cookies.remove("userName");
             Cookies.remove("token");
-            Cookies.remove("isUserAdmin");
+            Cookies.remove("isUserRole");
             Cookies.remove("email");
-            Cookies.remove("contactNumber");
-            Cookies.remove("walletBalance");
-            Cookies.remove("referralCode");
 
             return {
                 ...state,
@@ -70,22 +67,16 @@ const reducer = (state = initialState, action) => {
                 isAuth: false,
                 isAdmin: false,
                 token: "",
-                username: "",
+                userName: "",
                 email: "",
-                contactNumber: "",
-                walletBalance: 0,
-                referralCode: "",
             };
 
         case types.USER_SIGNOUT_SUCCESS:
             Cookies.remove("isAuth");
-            Cookies.remove("user_name");
+            Cookies.remove("userName");
             Cookies.remove("token");
-            Cookies.remove("isUserAdmin");
+            Cookies.remove("isUserRole");
             Cookies.remove("email");
-            Cookies.remove("contactNumber");
-            Cookies.remove("walletBalance");
-            Cookies.remove("referralCode");
 
             return {
                 ...state,
@@ -94,11 +85,8 @@ const reducer = (state = initialState, action) => {
                 isError: false,
                 isAdmin: false,
                 token: "",
-                username: "",
+                userName: "",
                 email: "",
-                contactNumber: "",
-                walletBalance: 0,
-                referralCode: "",
             };
 
         default:

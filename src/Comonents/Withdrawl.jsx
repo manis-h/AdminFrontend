@@ -22,23 +22,24 @@ const Withdrawl = () => {
     });
 
     const [filteredStatus, setFilteredStatus] = useState(
-        () => localStorage.getItem("filteredStatus") || "A"
+        () => localStorage.getItem("filteredStatus") || "All"
     );
-    const [filteredData, setFilteredData] = useState(transactions);
 
-    const handleSubmit = async (page, filteredStatus) => {
+    const [typeFilter, setTypeFilter] = useState(
+        () => localStorage.getItem("typeFilter") || "All"
+    );
+
+    const handleSubmit = async (page, typeFilter, filteredStatus) => {
         try {
             const { data } = await axios.get(
-                `http://localhost:4000/transaction-logs?page=${page}&status=${filteredStatus}`,
+                `http://localhost:4000/transaction-logs?page=${page}&type=${typeFilter}&status=${filteredStatus}`,
                 {
                     headers: {
                         Authorization: `${token}`, // Attaches the authorization token to the request headers
                     },
                 }
             );
-            console.log(data.data);
             setTransactions(data.data);
-            console.log(transactions);
             setTotalPages(data.totalPages);
             setCurrentPage(data.currentPage);
             // You can handle data here, such as setting state or other side effects
@@ -55,23 +56,10 @@ const Withdrawl = () => {
             });
         }
     };
-    console.log(transactions);
 
     useEffect(() => {
-        handleSubmit(currentPage, filteredStatus);
-    }, [currentPage, filteredStatus]);
-
-    useEffect(() => {
-        if (filteredStatus === "All") {
-            console.log(transactions);
-            setFilteredData(transactions);
-        } else {
-            setFilteredData(
-                transactions.filter((item) => item.status === filteredStatus)
-            );
-        }
-        localStorage.setItem("filteredStatus", filteredStatus);
-    }, [filteredStatus, transactions]); // Depend on filteredStatus
+        handleSubmit(currentPage, typeFilter, filteredStatus);
+    }, [currentPage, typeFilter, filteredStatus]);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -103,15 +91,20 @@ const Withdrawl = () => {
         });
     };
 
-    const handleFilterChange = (status) => {
+    const handleTypeFilterChange = (type) => {
+        setTypeFilter(type);
+        console.log(typeFilter);
+    };
+
+    const handleStatusFilterChange = (status) => {
         setFilteredStatus(status);
-        if (status === "All") {
-            setFilteredData(transactions);
-        } else {
-            setFilteredData(
-                transactions.filter((item) => item.status === status)
-            );
-        }
+        // if (status === "All") {
+        //     setFilteredData(transactions);
+        // } else {
+        //     setFilteredData(
+        //         transactions.filter((item) => item.status === status)
+        //     );
+        // }
     };
 
     // const handleAmountChange = (e) => {
@@ -206,13 +199,25 @@ const Withdrawl = () => {
                             <th>UserId</th>
                             <th>Amount</th>
                             <th>UTR Number</th>
-                            <th>Type</th>
+                            <th>
+                                Type &nbsp;
+                                <select
+                                    onChange={(e) =>
+                                        handleTypeFilterChange(e.target.value)
+                                    }
+                                    value={typeFilter}
+                                >
+                                    <option value="All">All</option>
+                                    <option value="D">Deposite</option>
+                                    <option value="W">Withdrawal</option>
+                                </select>
+                            </th>
                             <th>
                                 Status &nbsp;
                                 {/* Dropdown filter on click */}
                                 <select
                                     onChange={(e) =>
-                                        handleFilterChange(e.target.value)
+                                        handleStatusFilterChange(e.target.value)
                                     }
                                     value={filteredStatus}
                                 >
@@ -227,10 +232,9 @@ const Withdrawl = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredData &&
-                            filteredData.map((transaction, index) => (
+                        {transactions &&
+                            transactions.map((transaction, index) => (
                                 <tr key={index}>
-                                    {console.log(transaction)}
                                     <td>{transaction?.user_id}</td>
                                     <td>{transaction.amount}</td>
                                     <td>{transaction.unique_transaction_id}</td>
@@ -260,7 +264,7 @@ const Withdrawl = () => {
                                         ) : (
                                             ""
                                         )}
-                                        {transaction.type === "W" ? (
+                                        {transaction.status === "C" ? (
                                             <Button
                                                 className="btn-decline"
                                                 onClick={() =>
@@ -269,7 +273,7 @@ const Withdrawl = () => {
                                                     )
                                                 }
                                             >
-                                                Delete
+                                                Declined
                                             </Button>
                                         ) : (
                                             ""
@@ -350,6 +354,9 @@ const Withdrawl = () => {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
+                    <Button className="bg-danger" onClick={handleCloseModal}>
+                        Delete
+                    </Button>
                     <Button variant="secondary" onClick={handleCloseModal}>
                         Close
                     </Button>

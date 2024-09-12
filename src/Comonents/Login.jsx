@@ -38,7 +38,6 @@ const Login = () => {
                 `http://localhost:4000/verify?email=${email}`,
                 { otp }
             );
-            console.log(response.data);
             handleCloseOtpModal();
             navigate(`/reset-password/${response.data.id}`);
         } catch (error) {
