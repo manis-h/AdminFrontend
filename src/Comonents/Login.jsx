@@ -5,47 +5,45 @@ import { userAuthentication } from "../Redux/Auth/action";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import EmailModal from "./Modal";
+import OTPModal from "./OTPModal";
 
 const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [show, setShow] = useState(false);
+    const [showEmailModal, setShowEmailModal] = useState(false);
+    const [showOtpModal, setShowOtpModal] = useState(false);
     const [formData, setLoginData] = useState({
         username: "",
         password: "",
     });
+
     const [email, setEmail] = useState("");
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleCloseEmailModal = () => setShowEmailModal(false);
+    const handleShowEmailModal = () => setShowEmailModal(true);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleCloseOtpModal = () => setShowOtpModal(false);
+    const handleShowOtpModal = () => setShowOtpModal(true);
 
+    const handleEmailSubmit = (submittedEmail) => {
+        setEmail(submittedEmail);
+        handleCloseEmailModal();
+        handleShowOtpModal();
+    };
+
+    const handleOtpSubmit = async (otp) => {
         try {
-            console.log(email);
-
-            const data = await axios.post(
-                "http://localhost:4000/reset-password",
-                { email }
+            const response = await axios.post(
+                `http://localhost:4000/verify?email=${email}`,
+                { otp }
             );
-
-            console.log(data);
-
-            toast.success("Reset password OTP send", {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-            // You can handle data here, such as setting state or other side effects
+            console.log(response.data);
+            handleCloseOtpModal();
+            navigate(`/reset-password/${response.data.id}`);
         } catch (error) {
-            console.error("Error fetching data:", error); // Logs any errors that occur during the API call
-            toast.error("Email not found or invalid", {
+            console.error("Error verifying OTP:", error);
+            toast.error("Invalid OTP", {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -54,10 +52,8 @@ const Login = () => {
                 draggable: true,
                 progress: undefined,
             });
+            handleShowOtpModal();
         }
-        // Handle the email submission logic here
-        console.log("Email submitted:", email);
-        handleClose();
     };
 
     const handleLoginChange = (e) => {
@@ -143,18 +139,21 @@ const Login = () => {
                 style={{ textDecoration: "none" }}
                 onClick={(e) => {
                     e.preventDefault(); // Prevent default anchor behavior
-                    handleShow();
+                    handleShowEmailModal();
                 }}
             >
                 Forget Password?
             </a>
             {/* Modal component */}
             <EmailModal
-                show={show}
-                handleClose={handleClose}
-                handleSubmit={handleSubmit}
-                email={email}
-                setEmail={setEmail}
+                show={showEmailModal}
+                handleClose={() => handleCloseEmailModal()}
+                handleEmailSubmit={handleEmailSubmit}
+            />
+            <OTPModal
+                show={showOtpModal}
+                handleClose={() => handleCloseOtpModal()}
+                handleOtpSubmit={handleOtpSubmit}
             />
         </>
     );
