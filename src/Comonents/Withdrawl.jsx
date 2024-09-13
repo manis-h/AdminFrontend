@@ -58,6 +58,8 @@ const Withdrawl = () => {
     };
 
     useEffect(() => {
+        localStorage.setItem("filteredStatus", filteredStatus);
+        localStorage.setItem("typeFilter", typeFilter);
         handleSubmit(currentPage, typeFilter, filteredStatus);
     }, [currentPage, typeFilter, filteredStatus]);
 
