@@ -4,6 +4,7 @@ import { Button, Table, Modal, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import SideBar from "./SideBar";
+import Swal from "sweetalert2";
 
 const Withdrawl = () => {
     const { token } = useSelector((store) => store.AuthReducer);
@@ -65,6 +66,17 @@ const Withdrawl = () => {
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
+    };
+
+    const handleImgClick = (imgLink) => {
+        Swal.fire({
+            imageUrl: imgLink,
+            imageWidth: "80%", // Set the image width
+            imageHeight: "90%", // Set the image height
+            imageAlt: "Custom image",
+            width: "85%", // Set the modal width slightly larger than the image
+            confirmButtonText: "Close",
+        });
     };
 
     const handleCloseModal = () => {
@@ -347,6 +359,20 @@ const Withdrawl = () => {
                             <p>
                                 <strong>UTR Number:</strong>{" "}
                                 {selectedTransaction.unique_transaction_id}
+                            </p>
+                            <p
+                                onClick={() =>
+                                    handleImgClick(
+                                        selectedTransaction.attachment
+                                    )
+                                }
+                            >
+                                <img
+                                    src={`${selectedTransaction.attachment}`}
+                                    alt="image"
+                                    width={"50%"}
+                                    height={"50%"}
+                                />
                             </p>
                             <p>
                                 <strong>Date:</strong>{" "}

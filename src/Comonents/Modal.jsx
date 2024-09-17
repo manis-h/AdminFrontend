@@ -8,7 +8,7 @@ const EmailModal = ({ show, handleClose, handleEmailSubmit }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const data = await axios.put(
+            const data = await axios.patch(
                 `http://localhost:4000/reset-password?email=${email}`
             );
 

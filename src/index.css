@@ -31,3 +31,8 @@ code {
 .otp-input:focus {
     border-color: #007bff; /* Border color when focused */
 }
+
+.blur-background {
+    filter: blur(8px); /* Adjust the blur strength */
+    transition: filter 0.3s ease; /* Smooth transition */
+}

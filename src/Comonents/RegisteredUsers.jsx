@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Table, Form } from "react-bootstrap";
 import SideBar from "./SideBar";
+import Swal from "sweetalert2";
 
 const RegisteredUsers = () => {
     const { token } = useSelector((store) => store.AuthReducer);
@@ -28,6 +29,43 @@ const RegisteredUsers = () => {
     useEffect(() => {
         getAccounts();
     }, [getAccounts]);
+
+    const handleUserClick = (user) => {
+        Swal.fire({
+            title: "User Details",
+            html: `
+                <table style="width:100%; border-collapse:collapse;">
+                    <tr style="height: 50px; border-bottom: 1px solid #ccc;">
+                        <td style="font-weight:bold; text-align:left; padding-right:10px;">Username:</td>
+                        <td style="text-align:left;">${user.userName}</td>
+                    </tr>
+                    <tr style="height: 50px; border-bottom: 1px solid #ccc;">
+                        <td style="font-weight:bold; text-align:left; padding-right:10px;">Name:</td>
+                        <td style="text-align:left;">${user.name}</td>
+                    </tr>
+                    <tr style="height: 50px; border-bottom: 1px solid #ccc;">
+                        <td style="font-weight:bold; text-align:left; padding-right:10px;">Points:</td>
+                        <td style="text-align:left;">${user.points}</td>
+                    </tr>
+                    <tr style="height: 50px; border-bottom: 1px solid #ccc;">
+                        <td style="font-weight:bold; text-align:left; padding-right:10px;">Email:</td>
+                        <td style="text-align:left;">${user.email}</td>
+                    </tr>
+                </table>
+            `,
+            confirmButtonText: "Close",
+            willOpen: () => {
+                document
+                    .getElementById("main-content")
+                    .classList.add("blur-background");
+            },
+            willClose: () => {
+                document
+                    .getElementById("main-content")
+                    .classList.remove("blur-background");
+            },
+        });
+    };
 
     const handleSwitchChange = async (userId, currentStatus) => {
         try {
@@ -78,7 +116,7 @@ const RegisteredUsers = () => {
     }, [users]); // Only logs when `users` changes
 
     return (
-        <div className="d-flex">
+        <div className="d-flex" id="main-content">
             <SideBar />
             <div className="custom-table w-100">
                 <Table bordered hover>
@@ -93,7 +131,10 @@ const RegisteredUsers = () => {
                     <tbody>
                         {Array.isArray(users) &&
                             users.map((user, index) => (
-                                <tr key={index}>
+                                <tr
+                                    key={index}
+                                    onClick={() => handleUserClick(user)}
+                                >
                                     <td>{user.userName}</td>
                                     <td>{user.name}</td>
                                     <td>{user.email}</td>
@@ -108,6 +149,9 @@ const RegisteredUsers = () => {
                                                         user._id,
                                                         user.status
                                                     )
+                                                }
+                                                onClick={(e) =>
+                                                    e.stopPropagation()
                                                 }
                                             />
                                         </Form>
